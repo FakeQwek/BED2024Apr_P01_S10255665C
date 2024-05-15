@@ -1,12 +1,13 @@
 const express = require("express");
-const sql = require("mssql"); // Assuming you've installed mssql
+const sql = require("mssql"); 
 const dbConfig = require("./dbConfig");
 const booksController = require("./controllers/booksController");
-const app = express();
-const bodyParser = require("body-parser");
-const port = process.env.PORT || 3000; // Use environment variable or default port;
 const validateBook = require("./middlewares/validateBook");
+const bodyParser = require("body-parser");
 
+const app = express();
+const port = process.env.PORT || 3000; // Use environment variable or default port;
+const staticMiddleware = express.static("public"); // Path to the public folder
 
 
 
@@ -17,6 +18,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // For form data handling
 app.post("/books", validateBook, booksController.createBook); 
 app.delete("/books/:id", booksController.deleteBook); // DELETE for deleting books
 app.put("/books/:id", validateBook, booksController.updateBook);
+app.use(staticMiddleware);
+
 
 app.listen(port, async () => {
   try {
